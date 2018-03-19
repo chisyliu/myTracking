@@ -44,7 +44,7 @@ for k = 1:numTimeSteps
     [updatedStateMeans(:, k), ...
         updatedStateCovs(:, :, k)] = filter.getStateMeanAndCov();
     
-%% TEST
+    %% TEST
     % resampling
     dm = filter.getState();
     dm_copy = dm.copy();
@@ -52,12 +52,12 @@ for k = 1:numTimeSteps
     indx = resampleSystematic(weights);
     rndSamples = samples(:, indx);
     % Gaussian mixture learning
-    numOfCompos = 6;
+    numOfCompos = 7;
     GMModel = fitgmdist(rndSamples', numOfCompos, 'RegularizationValue', 0.1);
     % Gaussian mixture fusion
     % TODO
     
-%%
+    %%
     
     % Simulate next system state
     sysState = sysModel.simulate(sysState);
@@ -135,39 +135,3 @@ end
 
 % Plot object trace
 plot(objectTrace(1, :), objectTrace(2, :), 'Color', [0 0.5 0], 'LineWidth', 1);
-
-function handle = plotCovariance(mean, covariance, confidence, varargin)
-    % covariance = V * D * V'
-    [V, D] = eig(covariance);
-    
-    sigma = sqrt(diag(D));
-    
-    scaling = sqrt(chi2inv(confidence, 2));
-    
-    if covariance(1, 1) > covariance(2, 2)
-        phi = atan2(V(2, 2), V(1, 2));
-        
-        extent = scaling * [sigma(2) sigma(1)];
-    else
-        phi = atan2(V(2, 1), V(1, 1));
-        
-        extent = scaling * [sigma(1) sigma(2)];
-    end
-    
-    handle = plotEllipse(mean, extent, phi, varargin{:});
-end
-
-function handle = plotEllipse(center, extent, angle, varargin)
-    a = 0:0.01:2*pi;
-    
-    s = [extent(1) * cos(a)
-         extent(2) * sin(a)];
-    
-    ca = cos(angle);
-    sa = sin(angle);
-    
-    s = [ca -sa
-         sa  ca] * s;
-    
-    handle = plot([s(1, :) s(1, 1)] + center(1), [s(2, :) s(2, 1)] + center(2), varargin{:});
-end
