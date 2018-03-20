@@ -44,21 +44,6 @@ for k = 1:numTimeSteps
     [updatedStateMeans(:, k), ...
         updatedStateCovs(:, :, k)] = filter.getStateMeanAndCov();
     
-    %% TEST
-    % resampling
-    dm = filter.getState();
-    dm_copy = dm.copy();
-    [samples, weights] = dm_copy.getComponents();
-    indx = resampleSystematic(weights);
-    rndSamples = samples(:, indx);
-    % Gaussian mixture learning
-    numOfCompos = 7;
-    GMModel = fitgmdist(rndSamples', numOfCompos, 'RegularizationValue', 0.1);
-    % Gaussian mixture fusion
-    % TODO
-    
-    %%
-    
     % Simulate next system state
     sysState = sysModel.simulate(sysState);
     
