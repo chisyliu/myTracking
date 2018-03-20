@@ -1,14 +1,14 @@
-% Implementation of Star-Convex RHMs using Fourier Coefficients and the UKF according to the paper 
+% Implementation of Star-Convex RHMs using Fourier Coefficients and the UKF according to the paper
 %
-% M. Baum and U. D. Hanebeck, "Shape tracking of extended objects and group targets with star-convex RHMs," 
+% M. Baum and U. D. Hanebeck, "Shape tracking of extended objects and group targets with star-convex RHMs,"
 % 14th International Conference on Information Fusion, Chicago, IL, 2011, pp. 1-8.
 % URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5977661&isnumber=5977431
 %
-% Source code written by Robin Sandkuehler & Marcus Baum 
+% Source code written by Robin Sandkuehler & Marcus Baum
 
 function randomHypersurfaceModel_2011(numberOfMeasurement)
 if nargin ==0
-numberOfMeasurement= 100;
+    numberOfMeasurement= 100;
 end
 % Number of Fourier coefficients
 nr_Fourier_coeff = 11;
@@ -101,7 +101,7 @@ while measurementsourceNotValid
     y = -c/2 + c.*rand(1, 1);
     
     if y > b/2 && x < -d/2 || y > b/2 && x > d/2 ||...
-       y < -b/2 && x < -d/2 || y < -b/2 && x > d/2
+            y < -b/2 && x < -d/2 || y < -b/2 && x > d/2
         
         x = -a/2 + a.*rand(1, 1);
         y = -c/2 + c.*rand(1, 1);
@@ -128,7 +128,7 @@ for j = 1 : numberOfSigmaPoints
     m = x(nr_Fourier_coeff + 1:nr_Fourier_coeff + 2, j);
     
     theta = atan2(y(2) - m(2), y(1) - m(1))+2*pi;
-
+    
     R = calcFourierCoeff(theta, nr_Fourier_coeff);
     
     e = [cos(theta); sin(theta)];
